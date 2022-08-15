@@ -15,7 +15,7 @@ typedef struct ASolutions SSolutions;
 void coefficients_input (float *a, float *b, float *c);
 int zero_comparation (float x);
 void equation_solver_1 (float b,float c, int *p_SolutionsAmount,SSolutions *p_solution_1);
-void equation_solver_2 (float a,float b,float c) ;
+void equation_solver_2 (float a,float b,float c, int *p_SolutionsAmount,SSolutions *p_solution);
 void solutions_output (int SolutionsAmount, SSolutions solution);
 
 
@@ -29,12 +29,12 @@ int main (void)
     float a = 0, b = 0, c = 0;
 
 
-    coefficients_input (&a,&b,&c);
+    coefficients_input (&a, &b, &c);
 
     if (zero_comparation(a) == 0)
-        equation_solver_1 (b,c,&SolutionsAmount,&solution);
+        equation_solver_1 (b, c, &SolutionsAmount, &solution);
     else
-        equation_solver_2 (a,b,c);
+        equation_solver_2 (a, b, c, &SolutionsAmount, &solution);
     solutions_output (SolutionsAmount,solution);
     return 0;
 }
@@ -60,7 +60,6 @@ int zero_comparation (float x)
 
 void equation_solver_1 (float b,float c,int *p_SolutionsAmount, SSolutions  *p_solution )
 {
-    //printf (" ! \n");
     if ((zero_comparation(b) == 0) && (zero_comparation(c) == 0) )
         *p_SolutionsAmount = InfiniteSolutions;
     else if (zero_comparation(b) == 0)
@@ -77,13 +76,25 @@ void equation_solver_1 (float b,float c,int *p_SolutionsAmount, SSolutions  *p_s
     }
 }
 
-void equation_solver_2 (float a,float b,float c)
+void equation_solver_2 (float a,float b,float c, int *p_SolutionsAmount,SSolutions *p_solution)
 {
-    //printf (" !! \n");
-    float d = b*b - 4*a*c;
-    if (d < 0) printf ("The are NO solutions (for real numbers)");
-    else if (d == 0) printf ("The solution is: %f", -b/(2*a) );
-    else printf ("The solutions are: %f and %f", (-b - sqrt(d))/(2*a), (-b + sqrt(d))/(2*a) );
+    float discriminant = b*b - 4*a*c;
+    float doubled_a = 2*a;
+    float sqr_discr = sqrt(discriminant);
+
+    if (discriminant < 0)
+        *p_SolutionsAmount = NoSolutions;
+    else if (zero_comparation(discriminant) == 0)
+    {
+        *p_SolutionsAmount = OneSolution;
+        (*p_solution).x1 = -b/doubled_a;
+    }
+    else
+    {
+        *p_SolutionsAmount = TwoSolutions;
+        (*p_solution).x1 = (-b - sqr_discr)/doubled_a ;
+        (*p_solution).x2 = (-b + sqr_discr)/doubled_a;
+    }
 }
 
 void solutions_output (int SolutionsAmount, SSolutions solution)
