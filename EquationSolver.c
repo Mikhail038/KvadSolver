@@ -69,18 +69,18 @@ int zero_comparation (float x)
 void linear_solver (float b,float c, SSolutions  *p_solution)
 {
     if ((zero_comparation (b) == 0) && (zero_comparation (c) == 0) )
-        (*p_solution).n = InfiniteSolutions;
+        p_solution->n = InfiniteSolutions;
     else if (zero_comparation (b) == 0)
-        (*p_solution).n = NoSolutions;
+        p_solution->n = NoSolutions;
     else if (zero_comparation (c) == 0)
     {
-        (*p_solution).n = OneSolution;
-        (*p_solution).x1 = 0;
+        p_solution->n = OneSolution;
+        p_solution->x1 = 0;
     }
     else
     {
-        (*p_solution).n = OneSolution;
-        (*p_solution).x1 = -c/b;
+        p_solution->n = OneSolution;
+        p_solution->x1 = -c/b;
     }
 }
 
@@ -91,17 +91,17 @@ void square_solver (float a,float b,float c, SSolutions *p_solution)
     float sqr_discr = sqrt (discriminant);
 
     if (discriminant < 0)
-        (*p_solution).n = NoSolutions;
+        p_solution->n = NoSolutions;
     else if (zero_comparation (discriminant) == 0)
     {
-        (*p_solution).n = OneSolution;
-        (*p_solution).x1 = -b/doubled_a;
+        p_solution->n = OneSolution;
+        p_solution->x1 = -b/doubled_a;
     }
     else
     {
-        (*p_solution).n = TwoSolutions;
-        (*p_solution).x1 = (-b - sqr_discr)/doubled_a ;
-        (*p_solution).x2 = (-b + sqr_discr)/doubled_a;
+        p_solution->n = TwoSolutions;
+        p_solution->x1 = (-b - sqr_discr)/doubled_a ;
+        p_solution->x2 = (-b + sqr_discr)/doubled_a;
     }
 }
 
