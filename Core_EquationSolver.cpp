@@ -12,16 +12,16 @@ void coefficients_input (float *p_a, float *p_b, float *p_c)
     }
 }
 
-_Bool is_zero (float x)
+bool is_zero (float x)
 {
-    float approximate_zero = 1e-5;
+    const approximate_zero = 1e-5;
 
     if (fabs (x) < approximate_zero)
-        return 1;
-    else return 0;
+        return true;
+    else return false;
 }
 
-void linear_solver (float b, float c, Solutions  *p_solution)
+void linear_solver (float b, float c, Solutions *p_solution)
 {
     if (is_zero(b) && is_zero(c))
         p_solution->num = InfiniteSolutions;
@@ -35,15 +35,13 @@ void linear_solver (float b, float c, Solutions  *p_solution)
     else
     {
         p_solution->num = OneSolution;
-        p_solution->x1 = -c/b;
+        p_solution->x1 = -c / b;
     }
 }
 
 void square_solver (float a, float b, float c, Solutions *p_solution)
 {
     float discriminant = b * b - 4 * a * c;
-    float doubled_a = 2 * a;
-    float sqr_discr = sqrt (discriminant);
 
     if (discriminant < 0)
         p_solution->num = NoSolutions;
@@ -54,11 +52,16 @@ void square_solver (float a, float b, float c, Solutions *p_solution)
     }
     else if (is_zero(discriminant))
     {
+        float doubled_a = 2 * a;
+
         p_solution->num = OneSolution;
         p_solution->x1 = -b / doubled_a;
     }
     else
     {
+        float doubled_a = 2 * a;
+        float sqr_discr = sqrt (discriminant);
+
         p_solution->num = TwoSolutions;
         p_solution->x1 = (-b - sqr_discr) / doubled_a;
         p_solution->x2 = (-b + sqr_discr) / doubled_a;
