@@ -66,7 +66,7 @@ int zero_comparation (float x)
     else return 1;
 }
 
-void linear_solver (float b,float c, SSolutions  *p_solution)
+void linear_solver (float b, float c, SSolutions  *p_solution)
 {
     if ((zero_comparation (b) == 0) && (zero_comparation (c) == 0) )
         p_solution->n = InfiniteSolutions;
@@ -84,7 +84,7 @@ void linear_solver (float b,float c, SSolutions  *p_solution)
     }
 }
 
-void square_solver (float a,float b,float c, SSolutions *p_solution)
+void square_solver (float a, float b, float c, SSolutions *p_solution)
 {
     float discriminant = b*b - 4*a*c;
     float doubled_a = 2*a;
