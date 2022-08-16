@@ -2,7 +2,13 @@
 #include <stdlib.h>
 #include <math.h>
 
-enum Cases {InfiniteSolutions = -1, NoSolutions, OneSolution, TwoSolutions};
+enum Cases
+{
+InfiniteSolutions = -1,
+NoSolutions = 0,
+OneSolution = 1,
+TwoSolutions = 2
+};
 
 struct ASolutions
 {
@@ -14,8 +20,8 @@ typedef struct ASolutions SSolutions;
 
 void coefficients_input (float *a, float *b, float *c);
 int zero_comparation (float x);
-void equation_solver_1 (float b,float c, int *p_SolutionsAmount,SSolutions *p_solution_1);
-void equation_solver_2 (float a,float b,float c, int *p_SolutionsAmount,SSolutions *p_solution);
+void linear_solver (float b,float c, int *p_SolutionsAmount,SSolutions *p_solution_1);
+void square_solver (float a,float b,float c, int *p_SolutionsAmount,SSolutions *p_solution);
 void solutions_output (int SolutionsAmount, SSolutions solution);
 
 
@@ -28,14 +34,15 @@ int main (void)
     SSolutions solution;
     float a = 0, b = 0, c = 0;
 
-
     coefficients_input (&a, &b, &c);
 
     if (zero_comparation(a) == 0)
-        equation_solver_1 (b, c, &SolutionsAmount, &solution);
+        linear_solver (b, c, &SolutionsAmount, &solution);
     else
-        equation_solver_2 (a, b, c, &SolutionsAmount, &solution);
+        square_solver (a, b, c, &SolutionsAmount, &solution);
+
     solutions_output (SolutionsAmount,solution);
+
     return 0;
 }
 
@@ -58,7 +65,7 @@ int zero_comparation (float x)
     else return 1;
 }
 
-void equation_solver_1 (float b,float c,int *p_SolutionsAmount, SSolutions  *p_solution )
+void linear_solver (float b,float c,int *p_SolutionsAmount, SSolutions  *p_solution )
 {
     if ((zero_comparation(b) == 0) && (zero_comparation(c) == 0) )
         *p_SolutionsAmount = InfiniteSolutions;
@@ -76,7 +83,7 @@ void equation_solver_1 (float b,float c,int *p_SolutionsAmount, SSolutions  *p_s
     }
 }
 
-void equation_solver_2 (float a,float b,float c, int *p_SolutionsAmount,SSolutions *p_solution)
+void square_solver (float a,float b,float c, int *p_SolutionsAmount,SSolutions *p_solution)
 {
     float discriminant = b*b - 4*a*c;
     float doubled_a = 2*a;
