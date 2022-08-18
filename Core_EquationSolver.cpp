@@ -3,8 +3,8 @@
 
 #include "Core_EquationSolver.h"
 
-#ifndef CORE_EQUATION_SOLVER_C
-#define CORE_EQUATION_SOLVER_C
+#ifndef CORE_EQUATION_SOLVER_CPP
+#define CORE_EQUATION_SOLVER_CPP
 
 
 void coefficients_input (float *p_a, float *p_b, float *p_c)
