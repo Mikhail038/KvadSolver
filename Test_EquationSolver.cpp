@@ -1,7 +1,7 @@
 //Test File
 
 #include "Core_EquationSolver.h"
-#include "Core_EquationSolver.cpp"
+#include "Core_EquationSolver.c"
 
 enum TestCases StratCheckRes;
 
@@ -17,32 +17,42 @@ void start_check (FILE *InputFile);
 void testing (int TestsNumber, FILE *InputFile);
 void input (FILE *InputFile, EquationTests *p_equtest) ;
 void exam (int StartCheckRes, TestAnswers *p_answers);
-void solve_check (EquationTests *p_equtest);
-int linear_test_master (EquationTests *p_equtest);
-int square_test_master (EquationTests *p_equtest);
-bool same_answers (Solutions *p_mastersol, EquationTests *p_equtest);
+void solve_check (EquationTests *p_equtest, int testnumber);
+int linear_test_master (EquationTests *p_equtest, int testnumber);
+int square_test_master (EquationTests *p_equtest, int testnumber);
+bool check_answers (Solutions *p_mastersol, EquationTests *p_equtest,int testnumber);
 
 void unittest()
 {
-    printf("unittest\n");
+    //printf("unittest\n");
+
     InputFile = fopen ("COEFS.txt", "r");
     start_check (InputFile);
 }
 
-bool same_answers (Solutions *p_mastersol, EquationTests *p_equtest)
+bool check_answers (Solutions *p_mastersol, EquationTests *p_equtest,int testnumber)
 {
-    printf("same_answers\n");
-    printf("# %d %f %f %d %f %f\n", p_mastersol->num, p_mastersol->x1, p_mastersol->x2, p_equtest->tnum, p_equtest->tx1, p_equtest->tx2);
+    //printf("same_answers\n");
+
+    fprintf(OutputFile, "Test ¹%d  RIGHT ANSWERS: %d %f %f PROGRAMM ANSWERS: %d %f %f ", testnumber + 1,
+    p_mastersol->num, p_mastersol->x1, p_mastersol->x2, p_equtest->tnum, p_equtest->tx1, p_equtest->tx2);
 
     if ( ((p_mastersol->x1 == p_equtest->tx1) && (p_mastersol->x2 == p_equtest->tx2) && (p_mastersol->num == p_equtest->tnum)) ||
     (((p_mastersol->x1 == p_equtest->tx2) && (p_mastersol->x2 == p_equtest->tx1) && (p_mastersol->num == p_equtest->tnum))) )
+    {
+        fprintf (OutputFile, "PASSED\n");
         return true;
-    else return false;
+    }
+    else
+    {
+        fprintf (OutputFile, "FAILED  !!!\n");
+        return false;
+    }
 }
 
 void start_check (FILE *InputFile)
 {
-    printf("start_check\n");
+    //printf("start_check\n");
     int TestsNumber = -1;
 
     fscanf (InputFile, "%d", &TestsNumber);
@@ -57,66 +67,66 @@ void start_check (FILE *InputFile)
 
 void testing (int TestsNumber, FILE *InputFile)
 {
-    printf("testing\n");
+    //printf("testing\n");
     OutputFile = fopen ("RESULTS.txt", "w");
 
-    for (int i=0; i<TestsNumber; i++)
+    for (int testnumber=0; testnumber<TestsNumber; testnumber++)
     {
         input (InputFile, p_equtest);
-        solve_check (p_equtest);
+        solve_check (p_equtest, testnumber);
     }
     exam(Normal, p_answers);
 }
 
 void input (FILE *InputFile, EquationTests *p_equtest)
 {
-    printf("input\n");
+    //printf("input\n");
 
     fscanf (InputFile, "%f %f %f %d %f %f", &(p_equtest->ta), &(p_equtest->tb),
     &(p_equtest->tc), &(p_equtest->tnum), &(p_equtest->tx1), &(p_equtest->tx2));
 
-    printf ("%f %f %f %d %f %f \n", p_equtest->ta, p_equtest->tb,
-    p_equtest->tc, p_equtest->tnum, p_equtest->tx1, p_equtest->tx2 );
+    /*printf ("%f %f %f %d %f %f \n", p_equtest->ta, p_equtest->tb,
+    p_equtest->tc, p_equtest->tnum, p_equtest->tx1, p_equtest->tx2 );*/
 }
 
-void solve_check (EquationTests *p_equtest)
+void solve_check (EquationTests *p_equtest,int testnumber)
 {
-    printf("solve_check\n");
+    //printf("solve_check\n");
     if (is_zero(p_equtest->ta))
     {
-        p_answers->ok += linear_test_master (p_equtest);
+        p_answers->ok += linear_test_master (p_equtest, testnumber);
         p_answers->all++;
-        printf("! %d\n", p_answers->ok);
+        //printf("! %d\n", p_answers->ok);
     }
     else
     {
-        p_answers->ok += square_test_master (p_equtest);
+        p_answers->ok += square_test_master (p_equtest, testnumber);
         p_answers->all++;
-        printf("!! %d\n", p_answers->ok);
+        //printf("!! %d\n", p_answers->ok);
     }
 }
 
-int linear_test_master (EquationTests *p_equtest)
+int linear_test_master (EquationTests *p_equtest, int testnumber)
 {
-    printf("ltm\n");
+    //printf("ltm\n");
 
     linear_solver (p_equtest->tb, p_equtest->tc, p_mastersol);
-    if (same_answers (p_mastersol, p_equtest)) return 1;
+    if (check_answers (p_mastersol, p_equtest, testnumber)) return 1;
     else return 0;
 }
 
-int square_test_master (EquationTests *p_equtest)
+int square_test_master (EquationTests *p_equtest, int testnumber)
 {
-    printf("stm\n");
+    //printf("stm\n");
 
     square_solver (p_equtest->ta, p_equtest->tb, p_equtest->tc, p_mastersol);
-    if (same_answers (p_mastersol, p_equtest)) return 1;
+    if (check_answers (p_mastersol, p_equtest, testnumber)) return 1;
     else return 0;
 }
 
 void exam (int StartCheckRes, TestAnswers *p_answers)
 {
-    printf ("exam\n");
+    //printf ("exam\n");
     fclose (InputFile); fclose (OutputFile);
     switch (StartCheckRes)
     {

@@ -1,15 +1,15 @@
 //Main File
 
 #include "Core_EquationSolver.h"
-#include "Core_EquationSolver.cpp"
-#include "Test_EquationSolver.cpp"
+#include "Core_EquationSolver.c"
+#include "Test_EquationSolver.c"
 
 
 int main ()
 {
     int choise = 0;
 
-    printf ("Choose your side Anakin: ");
+    printf ("0 - NORMAL 1 - TEST: ");
     scanf ("%d", &choise);
 
     if (choise == 0)
@@ -28,7 +28,8 @@ int main ()
 
         solutions_output (p_solution);
     }
-    else unittest();
+    else
+        unittest();
 
     return 0;
 }
