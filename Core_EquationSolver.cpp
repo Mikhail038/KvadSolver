@@ -1,6 +1,11 @@
 //Core File
 
+
 #include "Core_EquationSolver.h"
+
+#ifndef CORE_EQUATION_SOLVER_C
+#define CORE_EQUATION_SOLVER_C
+
 
 void coefficients_input (float *p_a, float *p_b, float *p_c)
 {
@@ -16,13 +21,15 @@ bool is_zero (float x)
 {
     const approximate_zero = 1e-5;
 
-    if (fabs (x) < approximate_zero)
+    if (fabs (x) <= approximate_zero)
         return true;
     else return false;
 }
 
 void linear_solver (float b, float c, Solutions *p_solution)
 {
+    p_solution->num = 0; p_solution->x1 = 0; p_solution->x2 = 0;
+
     if (is_zero(b) && is_zero(c))
         p_solution->num = InfiniteSolutions;
     else if (is_zero(b))
@@ -41,6 +48,8 @@ void linear_solver (float b, float c, Solutions *p_solution)
 
 void square_solver (float a, float b, float c, Solutions *p_solution)
 {
+    p_solution->num = 0; p_solution->x1 = 0; p_solution->x2 = 0;
+
     float discriminant = b * b - 4 * a * c;
 
     if (discriminant < 0)
@@ -87,3 +96,4 @@ void solutions_output (Solutions *p_solution)
     }
 }
 
+#endif
