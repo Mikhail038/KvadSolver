@@ -1,8 +1,8 @@
 //Main File
 
 #include "Core_EquationSolver.h"
-#include "Core_EquationSolver.c"
-#include "Test_EquationSolver.c"
+#include "Core_EquationSolver.cpp"
+#include "Test_EquationSolver.cpp"
 
 
 int main ()

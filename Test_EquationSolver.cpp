@@ -1,7 +1,7 @@
 //Test File
 
 #include "Core_EquationSolver.h"
-#include "Core_EquationSolver.c"
+#include "Core_EquationSolver.cpp"
 
 enum TestCases StratCheckRes;
 
