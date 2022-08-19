@@ -1,19 +1,12 @@
 //Test File
 
+
 #include "Core_EquationSolver.h"
 #include "Core_EquationSolver.cpp"
 
 #ifndef TEST_EQUATION_SOLVER_CPP
 #define TEST_EQUATION_SOLVER_CPP
 
-
-void unittest (void);
-void input (FILE *InputFile, EquationTests *p_equtest) ;
-void exam (FILE *InputFile, FILE *OutputFile, int StartCheckRes, TestAnswers *p_answers);
-void choose_master (FILE *OutputFile, EquationTests *p_equtest, int testnumber, TestAnswers *p_answers);
-int linear_test_master (FILE *OutputFile, EquationTests *p_equtest, int testnumber);
-int square_test_master (FILE *OutputFile, EquationTests *p_equtest, int testnumber);
-bool check_answers (FILE *OutputFile, Solutions *p_mastersol, EquationTests *p_equtest,int testnumber);
 
 void unittest()
 {
@@ -26,8 +19,10 @@ void unittest()
     InputFile = fopen ("COEFS.txt", "r");
 
     int TestsNumber = -1;
-
     fscanf (InputFile, "%d", &TestsNumber);
+
+    char junk1[100] = {};
+    fgets (junk1, 100, InputFile);
 
     if (TestsNumber == -1)
     {
@@ -51,9 +46,19 @@ void unittest()
 
             for (int testnumber=0; testnumber<TestsNumber; testnumber++)
             {
-                input (InputFile, p_equtest);
+                if (input (InputFile, p_equtest) == INPUT_RETURN)
+                {
+                    choose_master (OutputFile, p_equtest, testnumber, p_answers);
+                }
+                else
+                {
+                    fprintf (OutputFile, "Test ¹%d  WRONG DATA!!!\n", testnumber + 1);
 
-                choose_master (OutputFile, p_equtest, testnumber, p_answers);
+                    char junk2[100] = {};
+                    fgets (junk2, 100, InputFile);
+
+                    p_answers->all++;
+                }
             }
 
             exam (InputFile, OutputFile, StratCheckRes, p_answers);
@@ -78,10 +83,18 @@ bool check_answers (FILE *OutputFile, Solutions *p_mastersol, EquationTests *p_e
     }
 }
 
-void input (FILE *InputFile, EquationTests *p_equtest)
+int input (FILE *InputFile, EquationTests *p_equtest)
 {
-    fscanf (InputFile, "%f %f %f %d %f %f", &(p_equtest->ta), &(p_equtest->tb),
+    int marker = fscanf (InputFile, "%f %f %f %d %f %f", &(p_equtest->ta), &(p_equtest->tb),
     &(p_equtest->tc), &(p_equtest->tnum), &(p_equtest->tx1), &(p_equtest->tx2));
+
+    if (marker == INPUT_RETURN)
+    {
+        char junk3[100] = {};
+        fgets (junk3, 100, InputFile);
+    }
+
+    return marker;
 }
 
 void choose_master (FILE *OutputFile, EquationTests *p_equtest,int testnumber, TestAnswers *p_answers)
@@ -101,7 +114,9 @@ void choose_master (FILE *OutputFile, EquationTests *p_equtest,int testnumber, T
 int linear_test_master (FILE *OutputFile, EquationTests *p_equtest, int testnumber)
 {
     Solutions mastersol = {}; Solutions *p_mastersol = &mastersol;
+
     linear_solver (p_equtest->tb, p_equtest->tc, p_mastersol);
+
     if (check_answers (OutputFile, p_mastersol, p_equtest, testnumber))
         return 1;
     else
@@ -111,6 +126,7 @@ int linear_test_master (FILE *OutputFile, EquationTests *p_equtest, int testnumb
 int square_test_master (FILE *OutputFile, EquationTests *p_equtest, int testnumber)
 {
     Solutions mastersol = {}; Solutions *p_mastersol = &mastersol;
+
     square_solver (p_equtest->ta, p_equtest->tb, p_equtest->tc, p_mastersol);
     if (check_answers (OutputFile, p_mastersol, p_equtest, testnumber))
         return 1;
@@ -125,10 +141,10 @@ void exam (FILE *InputFile, FILE *OutputFile, int StartCheckRes, TestAnswers *p_
     switch (StartCheckRes)
     {
     case NoFile:
-        printf ("TEST FAILED: NO FILE FOUND ""COEFS.txt"" ");
+        printf ("TEST FAILED: FILE NOT FOUND OR CORRUPTED  <COEFS.txt> ");
         break;
     case NoCoefs:
-        printf ("TEST FAILED: NO COEFFICIENTS FOUND IN ""COEFS.txt"" ");
+        printf ("TEST FAILED: NO COEFFICIENTS FOUND IN <COEFS.txt> ");
         break;
     case Normal:
         printf ("TESTS RESULT: %d OF %d RIGHT ANSWERS", p_answers->ok, p_answers->all);

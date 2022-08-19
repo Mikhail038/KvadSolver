@@ -9,6 +9,8 @@
 #ifndef CORE_EQUATION_SOLVER_H
 #define CORE_EQUATION_SOLVER_H
 
+#define INPUT_RETURN 6
+
 
 enum Cases
 {
@@ -52,5 +54,13 @@ void linear_solver (float b, float c, Solutions *p_solution);
 void square_solver (float a, float b, float c, Solutions *p_solution);
 void solutions_output (Solutions *p_solution);
 
+
+void unittest (void);
+int input (FILE *InputFile, EquationTests *p_equtest) ;
+void choose_master (FILE *OutputFile, EquationTests *p_equtest, int testnumber, TestAnswers *p_answers);
+int linear_test_master (FILE *OutputFile, EquationTests *p_equtest, int testnumber);
+int square_test_master (FILE *OutputFile, EquationTests *p_equtest, int testnumber);
+bool check_answers (FILE *OutputFile, Solutions *p_mastersol, EquationTests *p_equtest,int testnumber);
+void exam (FILE *InputFile, FILE *OutputFile, int StartCheckRes, TestAnswers *p_answers);
 
 #endif
