@@ -14,7 +14,7 @@ int main ()
 
     if (choise == 0)
     {
-
+        Solutions solution = {}; Solutions *p_solution = &solution;
         float a = 0, b = 0, c = 0;
 
         coefficients_input (&a, &b, &c);
@@ -33,9 +33,6 @@ int main ()
 
     return 0;
 }
-
-
-
 
 
 

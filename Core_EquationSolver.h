@@ -45,7 +45,6 @@ typedef struct TestAnswers
     int all;
 } TestAnswers;
 
-Solutions solution = {}; Solutions *p_solution = &solution;
 
 void coefficients_input (float *p_a, float *p_b, float *p_c);
 bool is_zero (float x);
