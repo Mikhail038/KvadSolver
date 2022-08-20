@@ -2,13 +2,29 @@
 
 
 #ifndef TEST_EQUATION_SOLVER_CPP
-#define TEST_EQUATION_SOLVER_CPP
+#define TEST_EQUATION_SOLVER_C
 
+#include "Test_EquationSolver.h"
 #include "Core_EquationSolver.h"
 #include "Core_EquationSolver.cpp"
 
+bool assert_equtest (EquationTests *p_equtest)
+{
+    if (isfinite (p_equtest->ta) && isfinite (p_equtest->tb) && isfinite (p_equtest->tc) && isfinite ((float) p_equtest->tnum)
+    && isfinite (p_equtest->tx1) && isfinite (p_equtest->tx2))
+        return true;
+    else return false;
+}
 
-void unittest()
+void sclear (FILE *InputFile)
+{
+    assert (InputFile != NULL);
+
+    char junk[100] = {};
+    fgets (junk, 100, InputFile);
+}
+
+void unittest (void)
 {
     FILE *OutputFile = NULL,
     *InputFile = NULL;
@@ -23,8 +39,7 @@ void unittest()
     fscanf (InputFile, "%d", &TestsNumber);
     assert (TestsNumber >= 0);
 
-    char junk1[100] = {};
-    fgets (junk1, 100, InputFile);
+    sclear (InputFile);
 
     OutputFile = fopen ("RESULTS.txt", "w");
     assert (OutputFile != NULL);
@@ -42,8 +57,7 @@ void unittest()
         {
             fprintf (OutputFile, "Test #%d  WRONG DATA!!!\n", testnumber + 1);
 
-            char junk2[100] = {};
-            fgets (junk2, 100, InputFile);
+            sclear (InputFile);
         }
         p_answers->all++;
     }
@@ -55,11 +69,19 @@ void unittest()
 
 bool check_answers (FILE *OutputFile, Solutions *p_mastersol, EquationTests *p_equtest,int testnumber)
 {
+    assert (OutputFile != NULL);
+    assert (p_mastersol != NULL);
+    assert (p_equtest != NULL);
+    assert (assert_solutions (p_mastersol));
+    assert (assert_equtest (p_equtest));
+    assert (isfinite ((float) testnumber));
+
+
     fprintf (OutputFile, "Test #%d  RIGHT ANSWERS: %d %f %f PROGRAMM ANSWERS: %d %f %f ", testnumber + 1,
     p_mastersol->num, p_mastersol->x1, p_mastersol->x2, p_equtest->tnum, p_equtest->tx1, p_equtest->tx2);
 
     if ( ((p_mastersol->x1 == p_equtest->tx1) && (p_mastersol->x2 == p_equtest->tx2) && (p_mastersol->num == p_equtest->tnum)) ||
-    (((p_mastersol->x1 == p_equtest->tx2) && (p_mastersol->x2 == p_equtest->tx1) && (p_mastersol->num == p_equtest->tnum))) )
+    ((p_mastersol->x1 == p_equtest->tx2) && (p_mastersol->x2 == p_equtest->tx1) && (p_mastersol->num == p_equtest->tnum)) )
     {
         fprintf (OutputFile, "PASSED\n");
         return true;
@@ -73,11 +95,14 @@ bool check_answers (FILE *OutputFile, Solutions *p_mastersol, EquationTests *p_e
 
 bool input (FILE *InputFile, EquationTests *p_equtest)
 {
+    assert (InputFile != NULL);
+    assert (p_equtest != NULL);
+    assert (assert_equtest (p_equtest));
+
     if (fscanf (InputFile, "%f %f %f %d %f %f", &(p_equtest->ta), &(p_equtest->tb),
     &(p_equtest->tc), &(p_equtest->tnum), &(p_equtest->tx1), &(p_equtest->tx2)) == 6)
     {
-        char junk3[100] = {};
-        fgets (junk3, 100, InputFile);
+        sclear (InputFile);
         return true;
     }
     return false;
@@ -85,6 +110,11 @@ bool input (FILE *InputFile, EquationTests *p_equtest)
 
 int test_master (FILE *OutputFile, EquationTests *p_equtest, int testnumber)
 {
+    assert (OutputFile != NULL);
+    assert (p_equtest != NULL);
+    assert (assert_equtest (p_equtest));
+    assert (isfinite ((float) testnumber));
+
     Solutions mastersol = {};
     Solutions *p_mastersol = &mastersol;
 
