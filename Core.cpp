@@ -6,6 +6,21 @@
 
 #include "Core.h"
 
+double ctg (double x)
+{
+    return (1 / tan(x));
+}
+
+void f_table (double x_min, double x_max, double step, double (*func) (double), const char* str)
+{
+    for (double i = x_min; i < x_max + step; i += step)
+    {
+        (i  > x_max ) ? printf ("%s(%lg) = %lg\n\n", str, i, func(i)) :
+                        printf ("%s(%lg) = %lg\n", str, i, func(i));
+    }
+}
+
+//------------------------------------------------------------------------------------------------------
 Command Arr_Commands[NumberOfCmdCommands] =
 {
     {'h', "--help"   , HELP,    &f_cmd_help, "-h""  --help     "
@@ -128,7 +143,7 @@ void inter_main (void)
     } while (running);
 }
 
-void equation_solver (const double a,const double b, const double c, Solutions* p_solution)
+void equation_solver (const double a, const double b, const double c, Solutions* p_solution)
 {
     if (is_zero(a))
         linear_solver (b, c, p_solution);

@@ -20,9 +20,9 @@ void f_cmd_test (CmdInputStruct* data)
             data->outF = "RESULTS.txt";
         }
         unit_test (data->inpF, data->outF);
+        return;
     }
     //printf ("%s %s\n", data->inpF, data->outF);
-
 }
 
 bool check_answers (EquationTests* p_equtest, Solutions* p_mastersol)
@@ -75,17 +75,21 @@ void unit_test (const char* TstFileName, const char* ResFileName)
 
     for (int TestCounter = 0; TestCounter < TestsNumber; TestCounter++)
     {
+        printf ("!\n");
         if (input (InputFile, p_equtest))
         {
+            printf ("1\n");
             p_answers->ok += test_master (OutputFile, p_equtest, TestCounter);
         }
         else
         {
+            printf ("2\n");
             fprintf (OutputFile, "Test #%d  WRONG DATA!!!\n", TestCounter + 1);
 
             sclear (InputFile);
         }
         p_answers->all++;
+        printf ("%d!!%d\n", TestCounter, TestsNumber);
     }
 
     fclose (InputFile);
@@ -100,9 +104,9 @@ bool input (FILE* InputFile, EquationTests* p_equtest)
     MCA((p_equtest != NULL), NULL_POINTER);
     assert_p_equtest;
 
-    if (fscanf (InputFile, "%lg %lg %lg %d %lg %lg", &(p_equtest->ta),
-      &(p_equtest->tb),&(p_equtest->tc), (int*)&(p_equtest->tnum),
-      &(p_equtest->tx1), &(p_equtest->tx2)) == 6)
+    if (fscanf (InputFile, "%lg %lg %lg %i %lg %lg", &(p_equtest->ta),
+                &(p_equtest->tb),&(p_equtest->tc), (int*)&(p_equtest->tnum),
+                &(p_equtest->tx1), &(p_equtest->tx2)) == 6)
     {
         sclear (InputFile);
         return true;

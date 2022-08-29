@@ -40,8 +40,8 @@ typedef struct Command
 {
     char             sName;
     const char*      lName;
-    enum CommandMode mode;
-    void   (*func)  (CmdInputStruct*);
+    enum CommandMode  mode;
+    void            (*func)  (CmdInputStruct*);
     const char*      description;
 } Command;
 
@@ -117,7 +117,7 @@ typedef struct Solutions
                     error_name = "UNDEFINED_ERROR";                                    \
                     break;                                                             \
             }                                                                          \
-            printf("\n" "ERROR_%s___LINE_%d_FILE_%s\n_____IN_FUNTION___%s\n", error_name, __LINE__, __FILE__, __PRETTY_FUNCTION__);  \
+            printf("\n" "ERROR_%s___LINE_%d_FILE_%s\n_____IN_FUNCTION___%s\n", error_name, __LINE__, __FILE__, __PRETTY_FUNCTION__);  \
         } while (0)
 
 #define vMCA(condition, ErrorCode)                                                     \
@@ -156,6 +156,10 @@ typedef struct Solutions
             MCA ((isfinite (p_solution->x1)), IS_NOT_FINITE);                          \
             MCA ((isfinite (p_solution->x2)), IS_NOT_FINITE);                          \
         } while (0)
+
+double ctg (double x);
+
+void f_table (double x_min, double x_max, double step, double (*func) (double), const char* str);
 
 void f_cmd_con (CmdInputStruct* data);
 
@@ -217,7 +221,7 @@ void coefficients_input (const double* p_a, const double* p_b, const double* p_c
 bool is_zero (double x);
 
 /*!
-    @brief Function that cheks a-coefficient and then run another functions, which solve equation
+    @brief Function that checks a-coefficient and then run another functions, which solve equation
 
     @param[in] a a (a*x^2) coefficient
     @param[in] b b (b*x) coefficient
